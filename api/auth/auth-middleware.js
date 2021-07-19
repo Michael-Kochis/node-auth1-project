@@ -50,6 +50,7 @@ function checkUsernameExists(req, res, next) {
   const exists = users.findBy({username: username});
 
   if (exists) {
+    req.user = exists;
     next();
   } else {
     res.status(401).json({ message: "Invalid credentials" });

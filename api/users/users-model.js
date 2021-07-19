@@ -1,4 +1,5 @@
 const db = require('../../data/db-config');
+const bcrypt = require('bcryptjs');
 
 /**
   resolves to an ARRAY with all users, each user having { user_id, username }
@@ -28,6 +29,9 @@ async function findById(user_id) {
   resolves to the newly inserted user { user_id, username }
  */
 async function add(user) {
+  const pwdHash = bcrypt.hashSync(neoUser.password, 12);
+  user.password = pwdHash;
+  
   const user_id = await db.create(user);
   return await findById(user_id);
 }
