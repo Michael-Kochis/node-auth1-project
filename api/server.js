@@ -1,7 +1,10 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
+const session = require('express-session');
+const Store = require('connect-session-knex')(session);
 
+const dbConfig = require('../data/db-config');
 const userRouter = require('../api/users/users-router');
 const authRouter = require('../api/auth/auth-router');
 
@@ -20,6 +23,25 @@ const authRouter = require('../api/auth/auth-router');
 
 const server = express();
 
+server.use(session({
+  name: "chocolatechip",
+  secret: process.env.SESSION_SECRET 
+    || "Vogon poetry is the worst poetry in the universe.",
+  cookie: {
+    maxAge: 10 * 60 * 1000,
+    httpOnly: true,
+    secure: false
+  },
+  resave: false,
+  rolling: true,
+  saveUninitialized: false,
+  store: new Store({
+    dbConfig,
+    createTable: true,
+    clearInterval: 1000 * 60 * 10,
+    tableName: "sessions"
+  })
+}) );
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
