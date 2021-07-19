@@ -26,14 +26,16 @@ function restricted(req, res, next) {
     "message": "Username taken"
   }
 */
-function checkUsernameFree(req, res, next) {
+async function checkUsernameFree(req, res, next) {
   const { username } = req.body;
-  const exists = users.findBy({username: username});
+  const exists = await users.findBy({username: username}).first();
 
   if (!exists) {
     next();
   } else {
-    res.status(422).json({ message: "Username taken" });
+    res.status(422).json({ 
+      message: "Username taken"
+    });
   }
 }
 
@@ -45,9 +47,9 @@ function checkUsernameFree(req, res, next) {
     "message": "Invalid credentials"
   }
 */
-function checkUsernameExists(req, res, next) {
+async function checkUsernameExists(req, res, next) {
   const { username } = req.body;
-  const exists = users.findBy({username: username});
+  const exists = await users.findBy({username: username}).first();
 
   if (exists) {
     req.user = exists;

@@ -58,9 +58,8 @@ router.post('/register', [checkUsernameFree, checkPasswordLength], (req, res, ne
 router.post('/login', checkUsernameExists, (req, res, next) => {
   const user = req.user;
   const { password } = req.body;
-  if (req.headers.cookie) {
-    next();
-  } else if (bcrypt.compareSync(password, user.password)) {
+
+if (bcrypt.compareSync(password, user.password)) {
     res.set('Set-Cookie', 'validLogin=true; Max-Age: 7200000');
     res.status(200).json({ message: `Welcome ${user.username}` });
   } else {
@@ -83,7 +82,7 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
     "message": "no session"
   }
  */
-router.post('/logout', (req, res, next) => {
+router.get('/logout', (req, res, next) => {
   if (req.session && req.session.user) {
     const { username } = req.session.user
     req.session.destroy(err => {

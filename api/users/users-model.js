@@ -11,9 +11,9 @@ async function find() {
 /**
   resolves to an ARRAY with all users that match the filter condition
  */
-async function findBy(filter) {
-  return await db('users')
-    .where({ filter });
+function findBy(filter) {
+  return db('users')
+    .where( filter );
 }
 
 /**
@@ -29,11 +29,11 @@ async function findById(user_id) {
   resolves to the newly inserted user { user_id, username }
  */
 async function add(user) {
-  const pwdHash = bcrypt.hashSync(neoUser.password, 12);
+  const pwdHash = bcrypt.hashSync(user.password, 12);
   user.password = pwdHash;
-  
-  const user_id = await db.create(user);
-  return await findById(user_id);
+
+  const user_id = await db('users').insert(user);
+  return findById(user_id);
 }
 
 // Don't forget to add these to the `exports` object so they can be required in other modules
