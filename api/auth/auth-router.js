@@ -60,7 +60,7 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
   const { password } = req.body;
 
 if (bcrypt.compareSync(password, user.password)) {
-    res.set('Set-Cookie', 'validLogin=true; Max-Age: 7200000');
+    req.session.user = user;
     res.status(200).json({ message: `Welcome ${user.username}` });
   } else {
     res.status(401).json({ message: "Invalid credentials" });
@@ -92,13 +92,15 @@ router.get('/logout', (req, res, next) => {
         });
       } else {
         res.json({
-          message: `bye ${username}, thanks for playing`
+          message: 'logged out'
+          //message: `bye ${username}, thanks for playing`
         });
       }
     });
   } else {
     res.json({
-      message: `excuse me, do I know you?`
+      message: 'no session'
+      //message: `excuse me, do I know you?`
     });
   }})
 

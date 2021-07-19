@@ -9,12 +9,14 @@ const users = require('../users/users-model')
   }
 */
 function restricted(req, res, next) {
-  const token = req.header.cookie;
+  const token = req.session.user;
 
   if (token) {
     next();
   } else {
-    res.status(401).json({ message: "You shall not pass!" });
+    res.status(401).json({ 
+      message: "You shall not pass!",
+  });
   }
 }
 
